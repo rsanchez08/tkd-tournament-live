@@ -140,39 +140,8 @@ const GrupoBadge=({grupo,small})=>{
 
 // ─── PTF LOGO ─────────────────────────────────────────────────────────────────
 const PTFLogo=()=>(
-  <div style={{display:"flex",alignItems:"center",gap:14}}>
-    <svg width="118" height="66" viewBox="0 0 300 165" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="slvr" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#C8C8C8"/>
-          <stop offset="42%" stopColor="#FFFFFF"/>
-          <stop offset="100%" stopColor="#8A8A8A"/>
-        </linearGradient>
-      </defs>
-      {/* Top wing bar */}
-      <polygon points="36,2 264,2 282,15 18,15" fill="url(#slvr)"/>
-      {/* Left diagonal wing */}
-      <polygon points="18,15 80,21 60,68 10,78" fill="url(#slvr)"/>
-      {/* P shape — evenodd carves the bowl hole */}
-      <path d="M84,21 L140,21 L140,74 L104,74 L104,132 L84,132 Z M104,21 L120,21 L120,54 L104,54 Z"
-        fill="url(#slvr)" fillRule="evenodd"/>
-      {/* Right diagonal wing */}
-      <polygon points="282,15 220,21 240,68 290,78" fill="url(#slvr)"/>
-      {/* F shape */}
-      <path d="M160,21 L218,21 L218,41 L180,41 L180,61 L210,61 L210,80 L180,80 L180,132 L160,132 Z"
-        fill="url(#slvr)"/>
-      {/* Bottom text */}
-      <text x="150" y="154" textAnchor="middle" fontFamily="sans-serif"
-        fontSize="10" fontWeight="700" fill="#B0B0B0" letterSpacing="2.5">
-        PROFESSIONAL TAEKWONDO FEDERATION
-      </text>
-    </svg>
-    <div style={{display:"inline-flex",alignItems:"center",gap:5,
-      background:"#CE1126",padding:"4px 12px",borderRadius:3}}>
-      <span style={{fontSize:10,fontWeight:900,color:"#fff",letterSpacing:2}}>COSTA RICA</span>
-      <span style={{fontSize:12}}>🇨🇷</span>
-    </div>
-  </div>
+  <img src="/PHOTO-2026-04-23-18-26-17.jpg" alt="Professional Taekwondo Federation"
+    style={{height:56,width:"auto",display:"block"}}/>
 );
 
 // ─── BRACKET CHART ────────────────────────────────────────────────────────────
