@@ -141,33 +141,41 @@ const GrupoBadge=({grupo,small})=>{
 // ─── PTF LOGO ─────────────────────────────────────────────────────────────────
 const PTFLogo=()=>(
   <div style={{display:"flex",alignItems:"center",gap:14}}>
-    <svg width="80" height="54" viewBox="0 0 80 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Left "P" shape */}
-      <rect x="0"  y="0"  width="30" height="5"  fill="white"/>
-      <rect x="0"  y="0"  width="5"  height="54" fill="white"/>
-      <rect x="25" y="0"  width="5"  height="54" fill="white"/>
-      <rect x="10" y="13" width="5"  height="24" fill="white"/>
-      <rect x="10" y="13" width="15" height="5"  fill="white"/>
-      {/* Right "F" shape */}
-      <rect x="36" y="0"  width="44" height="5"  fill="white"/>
-      <rect x="36" y="0"  width="5"  height="54" fill="white"/>
-      <rect x="36" y="20" width="28" height="5"  fill="white"/>
-      <rect x="36" y="37" width="18" height="5"  fill="white"/>
+    <svg width="118" height="66" viewBox="0 0 300 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="slvr" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#C8C8C8"/>
+          <stop offset="42%" stopColor="#FFFFFF"/>
+          <stop offset="100%" stopColor="#8A8A8A"/>
+        </linearGradient>
+      </defs>
+      {/* Top wing bar */}
+      <polygon points="36,2 264,2 282,15 18,15" fill="url(#slvr)"/>
+      {/* Left diagonal wing */}
+      <polygon points="18,15 80,21 60,68 10,78" fill="url(#slvr)"/>
+      {/* P shape — evenodd carves the bowl hole */}
+      <path d="M84,21 L140,21 L140,74 L104,74 L104,132 L84,132 Z M104,21 L120,21 L120,54 L104,54 Z"
+        fill="url(#slvr)" fillRule="evenodd"/>
+      {/* Right diagonal wing */}
+      <polygon points="282,15 220,21 240,68 290,78" fill="url(#slvr)"/>
+      {/* F shape */}
+      <path d="M160,21 L218,21 L218,41 L180,41 L180,61 L210,61 L210,80 L180,80 L180,132 L160,132 Z"
+        fill="url(#slvr)"/>
+      {/* Bottom text */}
+      <text x="150" y="154" textAnchor="middle" fontFamily="sans-serif"
+        fontSize="10" fontWeight="700" fill="#B0B0B0" letterSpacing="2.5">
+        PROFESSIONAL TAEKWONDO FEDERATION
+      </text>
     </svg>
-    <div style={{lineHeight:1.25}}>
-      <div style={{fontSize:11,fontWeight:900,color:"#fff",letterSpacing:2,textTransform:"uppercase"}}>PROFESSIONAL</div>
-      <div style={{fontSize:11,fontWeight:900,color:"#fff",letterSpacing:2,textTransform:"uppercase"}}>TAEKWONDO</div>
-      <div style={{fontSize:11,fontWeight:900,color:"#fff",letterSpacing:2,textTransform:"uppercase"}}>FEDERATION</div>
-      <div style={{display:"inline-flex",alignItems:"center",gap:5,marginTop:4,
-        background:"#CE1126",padding:"3px 10px",borderRadius:3}}>
-        <span style={{fontSize:9,fontWeight:900,color:"#fff",letterSpacing:2}}>COSTA RICA</span>
-        <span style={{fontSize:11}}>🇨🇷</span>
-      </div>
+    <div style={{display:"inline-flex",alignItems:"center",gap:5,
+      background:"#CE1126",padding:"4px 12px",borderRadius:3}}>
+      <span style={{fontSize:10,fontWeight:900,color:"#fff",letterSpacing:2}}>COSTA RICA</span>
+      <span style={{fontSize:12}}>🇨🇷</span>
     </div>
   </div>
 );
 
-// ─── BRACKET CHART (dark section) ────────────────────────────────────────────
+// ─── BRACKET CHART ────────────────────────────────────────────────────────────
 const BracketChart=({bracket,bIdx,onSelectGanador,getNombreRonda})=>{
   const{rondas,totalRondas}=bracket;
   if(!rondas.length)return null;
@@ -186,13 +194,11 @@ const BracketChart=({bracket,bIdx,onSelectGanador,getNombreRonda})=>{
   return(
     <div style={{position:"relative",width:totalW,height:totalH,minHeight:MH+20}}>
       <svg style={{position:"absolute",top:0,left:0,width:totalW,height:totalH,overflow:"visible",pointerEvents:"none"}}>
-        <defs><filter id={`g${bIdx}`}><feGaussianBlur stdDeviation="1.5" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-        {paths.map((d,i)=><path key={i} d={d} stroke="#FFD700" strokeWidth={1.5} fill="none" strokeLinecap="round" opacity={0.55} filter={`url(#g${bIdx})`}/>)}
+        {paths.map((d,i)=><path key={i} d={d} stroke="#CE1126" strokeWidth={1.5} fill="none" strokeLinecap="round" opacity={0.4}/>)}
       </svg>
       {rondas.map((_,rIdx)=>(
         <div key={rIdx} style={{position:"absolute",top:-26,left:getRoundX(rIdx),width:MW,
-          textAlign:"center",fontSize:9,fontWeight:800,color:"#FFD700",textTransform:"uppercase",letterSpacing:2}}>
+          textAlign:"center",fontSize:9,fontWeight:800,color:"#CE1126",textTransform:"uppercase",letterSpacing:2}}>
           {getNombreRonda(rIdx,totalRondas)}
         </div>
       ))}
@@ -204,41 +210,41 @@ const BracketChart=({bracket,bIdx,onSelectGanador,getNombreRonda})=>{
         return(
           <div key={combate.id} style={{position:"absolute",top,left,width:MW,height:MH,
             borderRadius:8,overflow:"hidden",display:"flex",flexDirection:"column",
-            border:combate.ganador?"1px solid rgba(255,215,0,0.35)":"1px solid rgba(255,255,255,0.08)",
-            background:combate.ganador?"linear-gradient(135deg,rgba(255,215,0,0.06),rgba(18,18,40,0.97))":"linear-gradient(135deg,rgba(28,28,52,0.97),rgba(12,12,30,0.99))",
-            boxShadow:combate.ganador?"0 0 20px rgba(255,215,0,0.1)":"0 2px 12px rgba(0,0,0,0.5)"}}>
+            border:combate.ganador?"1px solid rgba(206,17,38,0.35)":"1px solid #E5E7EB",
+            background:combate.ganador?"#FFF9F9":"#FFFFFF",
+            boxShadow:combate.ganador?"0 2px 12px rgba(206,17,38,0.08)":"0 1px 4px rgba(0,0,0,0.07)"}}>
             {/* Atleta A */}
             <div onClick={()=>canClick&&onSelectGanador(bIdx,rIdx,cIdx,combate.atletaA)} style={{
               flex:1,display:"flex",alignItems:"center",gap:8,padding:"0 12px",
               cursor:canClick?"pointer":"default",transition:"all 0.15s",
-              background:winA?"rgba(255,215,0,0.08)":"transparent",
-              borderLeft:winA?"3px solid #FFD700":"3px solid transparent",
+              background:winA?"#FEF2F2":"transparent",
+              borderLeft:winA?"3px solid #CE1126":"3px solid transparent",
               opacity:combate.ganador&&!winA?0.35:1}}>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:12,fontWeight:700,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",color:winA?"#FFD700":"#f0f0f8"}}>
-                  {combate.atletaA?.nombre||<span style={{color:"#444",fontStyle:"italic",fontSize:11}}>Esperando…</span>}
+                <div style={{fontSize:12,fontWeight:700,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",color:winA?"#CE1126":"#111827"}}>
+                  {combate.atletaA?.nombre||<span style={{color:"#9CA3AF",fontStyle:"italic",fontSize:11}}>Esperando…</span>}
                 </div>
-                {combate.atletaA&&<div style={{fontSize:9,color:"#6a6a90",marginTop:1}}>{combate.atletaA.academia}</div>}
+                {combate.atletaA&&<div style={{fontSize:9,color:"#6B7280",marginTop:1}}>{combate.atletaA.academia}</div>}
               </div>
               {combate.atletaA&&<CintBadge cinturon={combate.atletaA.cinturon} small/>}
               {winA&&<span style={{fontSize:12}}>🏆</span>}
             </div>
             {/* VS */}
             <div style={{height:18,display:"flex",alignItems:"center",justifyContent:"center",
-              background:"rgba(255,215,0,0.04)",borderTop:"1px solid rgba(255,255,255,0.04)",borderBottom:"1px solid rgba(255,255,255,0.04)",
-              fontSize:8,fontWeight:900,color:"#FFD700",letterSpacing:4}}>VS</div>
+              background:"#F9FAFB",borderTop:"1px solid #F3F4F6",borderBottom:"1px solid #F3F4F6",
+              fontSize:8,fontWeight:900,color:"#9CA3AF",letterSpacing:4}}>VS</div>
             {/* Atleta B */}
             <div onClick={()=>canClick&&onSelectGanador(bIdx,rIdx,cIdx,combate.atletaB)} style={{
               flex:1,display:"flex",alignItems:"center",gap:8,padding:"0 12px",
               cursor:canClick?"pointer":"default",transition:"all 0.15s",
-              background:winB?"rgba(255,215,0,0.08)":"transparent",
-              borderLeft:winB?"3px solid #FFD700":"3px solid transparent",
+              background:winB?"#FEF2F2":"transparent",
+              borderLeft:winB?"3px solid #CE1126":"3px solid transparent",
               opacity:combate.ganador&&!winB?0.35:1}}>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:12,fontWeight:700,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",color:winB?"#FFD700":"#f0f0f8"}}>
-                  {combate.atletaB?combate.atletaB.nombre:combate.atletaA&&combate.ganador?<span style={{color:"#555"}}>BYE</span>:<span style={{color:"#444",fontStyle:"italic",fontSize:11}}>Esperando…</span>}
+                <div style={{fontSize:12,fontWeight:700,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",color:winB?"#CE1126":"#111827"}}>
+                  {combate.atletaB?combate.atletaB.nombre:combate.atletaA&&combate.ganador?<span style={{color:"#9CA3AF"}}>BYE</span>:<span style={{color:"#9CA3AF",fontStyle:"italic",fontSize:11}}>Esperando…</span>}
                 </div>
-                {combate.atletaB&&<div style={{fontSize:9,color:"#6a6a90",marginTop:1}}>{combate.atletaB.academia}</div>}
+                {combate.atletaB&&<div style={{fontSize:9,color:"#6B7280",marginTop:1}}>{combate.atletaB.academia}</div>}
               </div>
               {combate.atletaB&&<CintBadge cinturon={combate.atletaB.cinturon} small/>}
               {winB&&<span style={{fontSize:12}}>🏆</span>}
@@ -246,7 +252,7 @@ const BracketChart=({bracket,bIdx,onSelectGanador,getNombreRonda})=>{
             {combate.ganador&&combate.atletaA&&combate.atletaB&&(
               <button onClick={()=>onSelectGanador(bIdx,rIdx,cIdx,null)} style={{
                 position:"absolute",bottom:2,right:6,background:"none",border:"none",
-                color:"#555",cursor:"pointer",fontSize:9,padding:2}}>↩ reiniciar</button>
+                color:"#9CA3AF",cursor:"pointer",fontSize:9,padding:2}}>↩ reiniciar</button>
             )}
           </div>
         );
@@ -485,8 +491,8 @@ export default function TKDTournament(){
           padding:"14px 40px",borderRadius:8,border:"none",
           cursor:atletas.length<2?"not-allowed":"pointer",
           fontSize:15,fontWeight:700,letterSpacing:0.5,
-          background:atletas.length<2?"#D1D5DB":`linear-gradient(135deg,#CE1126,#8B0000)`,
-          color:"#fff",boxShadow:atletas.length>=2?"0 4px 20px rgba(206,17,38,0.4)":"none",
+          background:atletas.length<2?"#D1D5DB":"#CE1126",
+          color:"#fff",boxShadow:atletas.length>=2?"0 4px 16px rgba(206,17,38,0.35)":"none",
           transition:"all 0.3s"}}>
           🏆 Generar Brackets ({atletas.length} atletas)
         </button>
@@ -607,81 +613,80 @@ export default function TKDTournament(){
     const allCints=[...new Set(brackets.flatMap(b=>b.cinturones))];
     const BFBtn=({label,active,color,onClick})=>(
       <button onClick={onClick} style={{padding:"5px 12px",borderRadius:6,cursor:"pointer",fontSize:11,fontWeight:600,
-        border:active?`1.5px solid ${color}`:`1px solid rgba(255,255,255,0.12)`,
-        background:active?`${color}20`:"rgba(255,255,255,0.04)",
-        color:active?color:"rgba(255,255,255,0.5)",transition:"all 0.15s"}}>{label}</button>
+        border:active?`1.5px solid ${color}`:`1px solid ${T.border}`,
+        background:active?`${color}14`:"transparent",
+        color:active?color:T.muted,transition:"all 0.15s"}}>{label}</button>
     );
 
     if(!brackets.length)return(
       <div style={{maxWidth:900,margin:"0 auto",padding:"80px 24px",textAlign:"center"}}>
-        <div style={{fontSize:56,marginBottom:16,opacity:0.25}}>🏆</div>
-        <div style={{color:"#9CA3AF",fontSize:16,marginBottom:28}}>No hay brackets generados aún</div>
+        <div style={{fontSize:56,marginBottom:16,opacity:0.15}}>🏆</div>
+        <div style={{color:T.muted,fontSize:16,marginBottom:28}}>No hay brackets generados aún</div>
         <button onClick={handleGenerarBrackets} style={{padding:"13px 32px",borderRadius:8,border:"none",cursor:"pointer",
-          fontSize:14,fontWeight:700,color:"#fff",background:"linear-gradient(135deg,#CE1126,#8B0000)",
-          boxShadow:"0 4px 20px rgba(206,17,38,0.4)"}}>Generar Brackets</button>
+          fontSize:14,fontWeight:700,color:"#fff",background:"#CE1126",
+          boxShadow:"0 4px 16px rgba(206,17,38,0.35)"}}>Generar Brackets</button>
       </div>
     );
 
     return(
-      <div style={{minHeight:"calc(100vh - 72px)",background:"#07071a",padding:"28px 24px"}}>
+      <div style={{minHeight:"calc(100vh - 72px)",background:T.bg,padding:"28px 24px"}}>
         <div style={{maxWidth:1200,margin:"0 auto"}}>
 
           {/* Page header */}
           <div style={{textAlign:"center",marginBottom:32}}>
-            <div style={{fontSize:10,color:"#FFD700",letterSpacing:4,textTransform:"uppercase",marginBottom:6,fontWeight:700}}>Tournament Bracket</div>
-            <div style={{fontSize:26,fontWeight:900,letterSpacing:3,textTransform:"uppercase",
-              background:"linear-gradient(135deg,#fff 30%,#CE1126 65%,#002B7F 100%)",
-              WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
+            <div style={{fontSize:10,color:T.accent,letterSpacing:4,textTransform:"uppercase",marginBottom:6,fontWeight:700}}>Tournament Bracket</div>
+            <div style={{fontSize:26,fontWeight:900,letterSpacing:2,textTransform:"uppercase",color:T.text}}>
               PTF TAEKWONDO · COSTA RICA
             </div>
             <div style={{marginTop:14,display:"flex",justifyContent:"center",gap:10}}>
               <button onClick={()=>setBrackets(generarBrackets(atletas))} style={{
-                padding:"8px 18px",borderRadius:7,border:"1px solid rgba(255,215,0,0.2)",
-                background:"rgba(255,215,0,0.06)",color:"#FFD700",cursor:"pointer",fontSize:12,fontWeight:700}}>
+                padding:"8px 18px",borderRadius:7,border:`1px solid ${T.border}`,
+                background:T.card,color:T.sub,cursor:"pointer",fontSize:12,fontWeight:700,
+                boxShadow:T.shadow}}>
                 🔀 Re-sortear
               </button>
             </div>
           </div>
 
           {/* Bracket filters */}
-          <div style={{background:"rgba(255,255,255,0.04)",borderRadius:12,padding:18,
-            border:"1px solid rgba(255,255,255,0.08)",marginBottom:24}}>
+          <div style={{background:T.card,borderRadius:12,padding:18,
+            border:`1px solid ${T.border}`,marginBottom:24,boxShadow:T.shadow}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,flexWrap:"wrap",gap:8}}>
-              <div style={{fontSize:11,color:"#FFD700",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5}}>
+              <div style={{fontSize:11,color:T.accent,fontWeight:700,textTransform:"uppercase",letterSpacing:1.5}}>
                 🔍 Filtrar Brackets
-                {hayBFiltros&&<span style={{marginLeft:8,fontSize:10,color:"rgba(255,255,255,0.4)"}}>{bracketsFiltrados.length} de {brackets.length}</span>}
+                {hayBFiltros&&<span style={{marginLeft:8,fontSize:10,color:T.muted}}>{bracketsFiltrados.length} de {brackets.length}</span>}
               </div>
               {hayBFiltros&&(
                 <button onClick={limpiarBFiltros} style={{padding:"4px 12px",borderRadius:6,
-                  border:"1px solid rgba(206,17,38,0.4)",background:"rgba(206,17,38,0.1)",
-                  color:"#FF8A80",cursor:"pointer",fontSize:11,fontWeight:600}}>✕ Limpiar</button>
+                  border:"1px solid #FECACA",background:"#FEF2F2",
+                  color:"#B91C1C",cursor:"pointer",fontSize:11,fontWeight:600}}>✕ Limpiar</button>
               )}
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
               <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                <span style={{fontSize:10,color:"rgba(255,255,255,0.35)",fontWeight:700,textTransform:"uppercase",letterSpacing:1,minWidth:64}}>Grupo</span>
+                <span style={{fontSize:10,color:T.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:1,minWidth:64}}>Grupo</span>
                 {GRUPOS_EDAD.map(g=><BFBtn key={g} label={g} active={bFiltros.grupos.includes(g)} color={GRUPO_META[g].color} onClick={()=>toggleBFiltro("grupos",g)}/>)}
               </div>
               <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                <span style={{fontSize:10,color:"rgba(255,255,255,0.35)",fontWeight:700,textTransform:"uppercase",letterSpacing:1,minWidth:64}}>Género</span>
-                <BFBtn label="♂ Masculino" active={bFiltros.generos.includes("Masculino")} color="#60A5FA" onClick={()=>toggleBFiltro("generos","Masculino")}/>
-                <BFBtn label="♀ Femenino"  active={bFiltros.generos.includes("Femenino")}  color="#F472B6" onClick={()=>toggleBFiltro("generos","Femenino")}/>
+                <span style={{fontSize:10,color:T.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:1,minWidth:64}}>Género</span>
+                <BFBtn label="♂ Masculino" active={bFiltros.generos.includes("Masculino")} color="#1D4ED8" onClick={()=>toggleBFiltro("generos","Masculino")}/>
+                <BFBtn label="♀ Femenino"  active={bFiltros.generos.includes("Femenino")}  color="#DB2777" onClick={()=>toggleBFiltro("generos","Femenino")}/>
               </div>
               <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                <span style={{fontSize:10,color:"rgba(255,255,255,0.35)",fontWeight:700,textTransform:"uppercase",letterSpacing:1,minWidth:64}}>Peso</span>
-                {allPesos.map(p=><BFBtn key={p} label={p} active={bFiltros.pesos.includes(p)} color="#34D399" onClick={()=>toggleBFiltro("pesos",p)}/>)}
+                <span style={{fontSize:10,color:T.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:1,minWidth:64}}>Peso</span>
+                {allPesos.map(p=><BFBtn key={p} label={p} active={bFiltros.pesos.includes(p)} color="#059669" onClick={()=>toggleBFiltro("pesos",p)}/>)}
               </div>
               {allCints.length>0&&(
                 <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                  <span style={{fontSize:10,color:"rgba(255,255,255,0.35)",fontWeight:700,textTransform:"uppercase",letterSpacing:1,minWidth:64}}>Cinturón</span>
-                  {allCints.map(c=><BFBtn key={c} label={c} active={bFiltros.cinturones.includes(c)} color={CINTURON_COLORS[c]?.dot||"#FFD700"} onClick={()=>toggleBFiltro("cinturones",c)}/>)}
+                  <span style={{fontSize:10,color:T.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:1,minWidth:64}}>Cinturón</span>
+                  {allCints.map(c=><BFBtn key={c} label={c} active={bFiltros.cinturones.includes(c)} color={CINTURON_COLORS[c]?.dot||T.accent} onClick={()=>toggleBFiltro("cinturones",c)}/>)}
                 </div>
               )}
             </div>
           </div>
 
           {bracketsFiltrados.length===0&&hayBFiltros&&(
-            <div style={{textAlign:"center",padding:60,color:"rgba(255,255,255,0.3)"}}>
+            <div style={{textAlign:"center",padding:60,color:T.muted}}>
               <div style={{fontSize:36,marginBottom:10}}>🔍</div>
               <div>Ningún bracket coincide con los filtros seleccionados</div>
             </div>
@@ -694,27 +699,27 @@ export default function TKDTournament(){
             const campeon=bracket.rondas[bracket.rondas.length-1]?.[0]?.ganador;
             return(
               <div key={bIdx} style={{marginBottom:28,
-                background:"linear-gradient(135deg,rgba(10,10,28,0.98),rgba(5,5,20,0.99))",
-                border:campeon?"1px solid rgba(255,215,0,0.3)":"1px solid rgba(255,255,255,0.07)",
+                background:T.card,
+                border:campeon?`1px solid rgba(206,17,38,0.25)`:`1px solid ${T.border}`,
                 borderRadius:14,overflow:"hidden",
-                boxShadow:campeon?"0 0 40px rgba(255,215,0,0.07)":"0 4px 24px rgba(0,0,0,0.5)"}}>
+                boxShadow:campeon?T.shadowMd:T.shadow}}>
                 {/* Header */}
                 <div style={{padding:"14px 22px",
-                  borderBottom:`1px solid rgba(255,255,255,0.06)`,
+                  borderBottom:`1px solid ${T.border}`,
                   display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10,
-                  background:`linear-gradient(90deg,${gm.color}12,transparent)`}}>
+                  background:`linear-gradient(90deg,${gm.soft},${T.card})`}}>
                   <div style={{display:"flex",alignItems:"center",gap:14}}>
-                    <div style={{width:40,height:40,borderRadius:8,background:`${gm.color}18`,
+                    <div style={{width:40,height:40,borderRadius:8,background:gm.soft,
                       display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,
-                      border:`1px solid ${gm.color}40`}}>
+                      border:`1px solid ${gm.border}`}}>
                       {info.genero==="Masculino"?"♂":"♀"}
                     </div>
                     <div>
                       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
                         <GrupoBadge grupo={info.edad} small/>
-                        <span style={{fontSize:14,fontWeight:800,color:"#F0F0F8"}}>{info.genero} · {info.peso}</span>
+                        <span style={{fontSize:14,fontWeight:800,color:T.text}}>{info.genero} · {info.peso}</span>
                       </div>
-                      <div style={{fontSize:11,color:"rgba(255,255,255,0.35)"}}>{bracket.atletas.length} atletas</div>
+                      <div style={{fontSize:11,color:T.muted}}>{bracket.atletas.length} atletas</div>
                     </div>
                   </div>
                   <div style={{display:"flex",gap:4}}>{bracket.cinturones.map(c=><CintBadge key={c} cinturon={c} small/>)}</div>
@@ -722,13 +727,13 @@ export default function TKDTournament(){
                 {/* Champion */}
                 {campeon&&(
                   <div style={{margin:"14px 22px",padding:"14px 18px",borderRadius:10,
-                    background:"linear-gradient(135deg,rgba(255,215,0,0.08),rgba(255,215,0,0.03))",
-                    border:"1px solid rgba(255,215,0,0.2)",display:"flex",alignItems:"center",gap:14}}>
-                    <div style={{fontSize:32,filter:"drop-shadow(0 0 14px rgba(255,215,0,0.6))"}}>🏆</div>
+                    background:"#FEF9F9",border:"1px solid rgba(206,17,38,0.2)",
+                    display:"flex",alignItems:"center",gap:14}}>
+                    <div style={{fontSize:32}}>🏆</div>
                     <div>
-                      <div style={{fontSize:9,color:"#FFD700",textTransform:"uppercase",fontWeight:800,letterSpacing:2,marginBottom:3}}>Campeón</div>
-                      <div style={{fontSize:18,fontWeight:900,color:"#FFD700"}}>{campeon.nombre}</div>
-                      <div style={{fontSize:11,color:"rgba(255,255,255,0.4)"}}>{campeon.academia}</div>
+                      <div style={{fontSize:9,color:T.accent,textTransform:"uppercase",fontWeight:800,letterSpacing:2,marginBottom:3}}>Campeón</div>
+                      <div style={{fontSize:18,fontWeight:900,color:T.accent}}>{campeon.nombre}</div>
+                      <div style={{fontSize:11,color:T.muted}}>{campeon.academia}</div>
                     </div>
                     <CintBadge cinturon={campeon.cinturon}/>
                   </div>
@@ -746,7 +751,7 @@ export default function TKDTournament(){
   };
 
   return(
-    <div style={{minHeight:"100vh",background:vista==="brackets"?"#07071a":T.bg,
+    <div style={{minHeight:"100vh",background:T.bg,
       color:T.text,fontFamily:"'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif"}}>
       <style>{`
         @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
