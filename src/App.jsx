@@ -141,7 +141,7 @@ const GrupoBadge=({grupo,small})=>{
 // ─── PTF LOGO ─────────────────────────────────────────────────────────────────
 const PTFLogo=()=>(
   <img src="/PHOTO-2026-04-23-18-26-17.jpg" alt="Professional Taekwondo Federation"
-    style={{height:56,width:"auto",display:"block"}}/>
+    style={{height:56,width:"auto",display:"block",mixBlendMode:"screen"}}/>
 );
 
 // ─── BRACKET CHART ────────────────────────────────────────────────────────────
