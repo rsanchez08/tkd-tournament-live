@@ -538,7 +538,7 @@ export default function TKDTournament(){
             <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
               <thead>
                 <tr style={{background:"#F9FAFB",borderBottom:`2px solid ${T.border}`}}>
-                  {["#","Nombre","Género","Edad","Grupo","Categoría","Cinturón","Profesor","Academia"].map(h=>(
+                  {["#","Nombre","Género","Edad","Grupo","Categoría","Cinturón","Academia","Teléfono"].map(h=>(
                     <th key={h} style={{padding:"11px 14px",textAlign:"left",color:T.muted,fontWeight:700,fontSize:11,textTransform:"uppercase",letterSpacing:0.8,whiteSpace:"nowrap"}}>{h}</th>
                   ))}
                 </tr>
@@ -559,8 +559,8 @@ export default function TKDTournament(){
                     <td style={{padding:"10px 14px"}}><GrupoBadge grupo={a.grupoEdad} small/></td>
                     <td style={{padding:"10px 14px",fontWeight:600,color:T.sub}}>{a.categoria}</td>
                     <td style={{padding:"10px 14px"}}><CintBadge cinturon={a.cinturon} small/></td>
-                    <td style={{padding:"10px 14px",color:T.muted}}>{a.profesor}</td>
                     <td style={{padding:"10px 14px",color:T.muted}}>{a.academia}</td>
+                    <td style={{padding:"10px 14px",color:T.muted,whiteSpace:"nowrap"}}>{a.telefono||"—"}</td>
                   </tr>
                 ))}
               </tbody>
