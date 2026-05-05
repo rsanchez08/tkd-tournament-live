@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const SHEET_ID = "1CuWdEOdQcZ4hcA6U85nPvQ0C8CJs-OFyyMuTKhbAu3A";
+const SHEET_ID = "1vC7RFIPBPKrlIms_nizfAYAbeKYeqwlGzEijf6Mnvzo";
 const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Respuestas%20de%20formulario%201`;
 
 // ─── PTF CATEGORÍAS ───────────────────────────────────────────────────────────
@@ -66,11 +66,12 @@ const parseCSV=(text)=>{
 };
 const normalizarAtleta=(row)=>({
   id:row.id,
-  nombre:(row["Nombre Completo"]||"").trim(),
-  genero:(row["Género"]||row["GÃ©nero"]||row["Genero"]||"").trim(),
+  nombre:(row["Nombre del competidor"]||row["Nombre Completo"]||"").trim(),
+  genero:(row["Genero"]||row["Género"]||row["GÃ©nero"]||"").trim(),
   edad:parseInt(row["Edad"])||0,
-  categoria:(row["Categoría de Peso"]||row["CategorÃ­a de Peso"]||row["Categoria de Peso"]||"").trim(),
-  cinturon:(row["Cinturón"]||row["CinturÃ³n"]||row["Cinturon"]||"").trim(),
+  categoria:(row["Peso"]||row["Categoría de Peso"]||row["CategorÃ­a de Peso"]||row["Categoria de Peso"]||"").trim(),
+  cinturon:(row["Grado de cinturón"]||row["Cinturón"]||row["CinturÃ³n"]||row["Cinturon"]||"").trim(),
+  segmento:(row["Segmento de competición"]||"").trim(),
   profesor:(row["Profesor"]||"").trim(),
   academia:(row["Academia"]||"").trim(),
   grupoEdad:obtenerGrupoEdad(row["Edad"]),
