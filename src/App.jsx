@@ -72,6 +72,7 @@ const normalizarAtleta=(row)=>({
   categoria:(row["Peso"]||row["Categoría de Peso"]||row["CategorÃ­a de Peso"]||row["Categoria de Peso"]||"").trim(),
   cinturon:(row["Grado de cinturón"]||row["Cinturón"]||row["CinturÃ³n"]||row["Cinturon"]||"").trim(),
   segmento:(row["Segmento de competición"]||"").trim(),
+  telefono:(row["Número telefonico"]||"").trim(),
   profesor:(row["Profesor"]||"").trim(),
   academia:(row["Academia"]||"").trim(),
   grupoEdad:obtenerGrupoEdad(row["Edad"]),
