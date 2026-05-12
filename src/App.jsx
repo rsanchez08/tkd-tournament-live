@@ -736,19 +736,17 @@ export default function TKDTournament(){
       if(medalla==="bronce")map[k].bronce++;
     };
     brackets.forEach(({ rondas, totalRondas, atletas:pool })=>{
-      pool.forEach(a => reg(a, 1, null)); // 1 pt por participar
+      pool.forEach(a => reg(a, 0, null)); // registrar sin puntos base
       rondas.forEach((ronda, rIdx)=>{
         const distFinal = totalRondas - 1 - rIdx; // 0=final, 1=semi, 2=cuartos
         ronda.forEach(combate=>{
           if(!combate.ganador) return;
           const perdedor = [combate.atletaA, combate.atletaB].find(a => a && a.id !== combate.ganador.id);
           if(distFinal === 0){
-            reg(combate.ganador, 6, "oro");   // 1+6 = 7 pts
-            reg(perdedor,        2, "plata"); // 1+2 = 3 pts
+            reg(combate.ganador, 7, "oro");
+            reg(perdedor,        3, "plata");
           } else if(distFinal === 1){
-            reg(perdedor, 1, "bronce");       // 1+1 = 2 pts
-          } else if(distFinal === 2){
-            reg(perdedor, 0, null);           // 1 pt base
+            reg(perdedor, 2, "bronce");
           }
           // rondas anteriores: solo el 1 pt base
         });
@@ -762,7 +760,6 @@ export default function TKDTournament(){
       {label:"Campeón",    pts:7, color:"#D97706", bg:"#FEF3C7"},
       {label:"Subcampeón", pts:3, color:"#6B7280", bg:"#F3F4F6"},
       {label:"Bronce",     pts:2, color:"#92400E", bg:"#FEF3C7"},
-      {label:"Participó",  pts:1, color:"#059669", bg:"#DCFCE7"},
     ];
     return(
       <div style={{maxWidth:900,margin:"0 auto",padding:"32px 24px"}}>
