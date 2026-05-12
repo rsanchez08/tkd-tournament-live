@@ -341,7 +341,7 @@ export default function TKDTournament(){
       position:"sticky",top:0,zIndex:100,boxShadow:"0 2px 16px rgba(0,0,0,0.4)"}}>
       <PTFLogo/>
       <nav style={{display:"flex",gap:4}}>
-        {[{id:"dashboard",label:"Dashboard",icon:"📊"},{id:"atletas",label:"Atletas",icon:"🥋"},{id:"brackets",label:"Brackets",icon:"🏆"}].map(v=>(
+        {[{id:"dashboard",label:"Dashboard",icon:"📊"},{id:"atletas",label:"Atletas",icon:"🥋"},{id:"brackets",label:"Brackets",icon:"🏆"},{id:"ranking",label:"Ranking",icon:"🥇"}].map(v=>(
           <button key={v.id} onClick={()=>setVista(v.id)} style={{
             padding:"8px 18px",borderRadius:6,border:"none",cursor:"pointer",
             fontSize:13,fontWeight:600,transition:"all 0.15s",
@@ -721,6 +721,129 @@ export default function TKDTournament(){
     );
   };
 
+  // ─── RANKING ─────────────────────────────────────────────────────────────
+  const ranking = useMemo(()=>{
+    if(!brackets.length) return [];
+    const map = {};
+    const reg = (atleta, pts, medalla) => {
+      if(!atleta) return;
+      const k = atleta.id;
+      if(!map[k]) map[k] = { atleta, puntos:0, oro:0, plata:0, bronce:0, participaciones:0 };
+      map[k].puntos += pts;
+      map[k].participaciones += 1;
+      if(medalla==="oro")   map[k].oro++;
+      if(medalla==="plata") map[k].plata++;
+      if(medalla==="bronce")map[k].bronce++;
+    };
+    brackets.forEach(({ rondas, totalRondas, atletas:pool })=>{
+      pool.forEach(a => reg(a, 1, null)); // 1 pt por participar
+      rondas.forEach((ronda, rIdx)=>{
+        const distFinal = totalRondas - 1 - rIdx; // 0=final, 1=semi, 2=cuartos
+        ronda.forEach(combate=>{
+          if(!combate.ganador) return;
+          const perdedor = [combate.atletaA, combate.atletaB].find(a => a && a.id !== combate.ganador.id);
+          if(distFinal === 0){
+            reg(combate.ganador, 9, "oro");   // 1+9 = 10 pts
+            reg(perdedor,        6, "plata"); // 1+6 = 7 pts
+          } else if(distFinal === 1){
+            reg(perdedor, 4, "bronce");       // 1+4 = 5 pts
+          } else if(distFinal === 2){
+            reg(perdedor, 2, null);           // 1+2 = 3 pts
+          }
+          // rondas anteriores: solo el 1 pt base
+        });
+      });
+    });
+    return Object.values(map).sort((a,b)=> b.puntos - a.puntos || b.oro - a.oro || b.plata - a.plata || a.atleta.nombre.localeCompare(b.atleta.nombre));
+  },[brackets]);
+
+  const renderRanking=()=>{
+    const PUNTOS_INFO=[
+      {label:"Campeón",    pts:10, color:"#D97706", bg:"#FEF3C7"},
+      {label:"Subcampeón", pts:7,  color:"#6B7280", bg:"#F3F4F6"},
+      {label:"Semifinal",  pts:5,  color:"#92400E", bg:"#FEF3C7"},
+      {label:"Cuartos",    pts:3,  color:"#1D4ED8", bg:"#DBEAFE"},
+      {label:"Participó",  pts:1,  color:"#059669", bg:"#DCFCE7"},
+    ];
+    return(
+      <div style={{maxWidth:900,margin:"0 auto",padding:"32px 24px"}}>
+        <div style={{marginBottom:28}}>
+          <h1 style={{margin:0,fontSize:26,fontWeight:800,color:T.text,letterSpacing:-0.5}}>Ranking General</h1>
+          <p style={{margin:"4px 0 0",fontSize:13,color:T.muted}}>Puntuación acumulada del torneo actual</p>
+        </div>
+
+        {/* Leyenda */}
+        <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:24}}>
+          {PUNTOS_INFO.map(p=>(
+            <div key={p.label} style={{display:"flex",alignItems:"center",gap:6,padding:"5px 12px",
+              borderRadius:20,background:p.bg,border:`1px solid ${p.color}30`}}>
+              <span style={{fontSize:11,fontWeight:700,color:p.color}}>{p.label}</span>
+              <span style={{fontSize:11,fontWeight:900,color:p.color}}>{p.pts} pts</span>
+            </div>
+          ))}
+        </div>
+
+        {!brackets.length&&(
+          <div style={{textAlign:"center",padding:60,color:T.muted}}>
+            <div style={{fontSize:48,marginBottom:12,opacity:0.2}}>🥇</div>
+            <div style={{fontSize:15}}>Genera los brackets primero para ver el ranking</div>
+            <button onClick={()=>{handleGenerarBrackets();}} style={{marginTop:20,padding:"10px 28px",
+              borderRadius:8,border:"none",cursor:"pointer",fontSize:13,fontWeight:700,
+              color:"#fff",background:"#CE1126"}}>Generar Brackets</button>
+          </div>
+        )}
+
+        {ranking.length>0&&(
+          <div style={{background:T.card,borderRadius:12,boxShadow:T.shadowMd,border:`1px solid ${T.border}`,overflow:"hidden"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+              <thead>
+                <tr style={{background:"#F9FAFB",borderBottom:`2px solid ${T.border}`}}>
+                  {["Pos","Atleta","Academia","Grupo","Cinturón","🥇","🥈","🥉","Puntos"].map(h=>(
+                    <th key={h} style={{padding:"11px 14px",textAlign:h==="Puntos"||h==="🥇"||h==="🥈"||h==="🥉"?"center":"left",
+                      color:T.muted,fontWeight:700,fontSize:11,textTransform:"uppercase",letterSpacing:0.8,whiteSpace:"nowrap"}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {ranking.map((r,i)=>{
+                  const pos = i+1;
+                  const medal = pos===1?"🥇":pos===2?"🥈":pos===3?"🥉":null;
+                  const rowBg = pos===1?"#FFFBEB":pos===2?"#F8FAFC":pos===3?"#FFF7ED":"transparent";
+                  return(
+                    <tr key={r.atleta.id} style={{borderBottom:`1px solid ${T.border}`,background:rowBg}}>
+                      <td style={{padding:"12px 14px",fontWeight:800,fontSize:15,
+                        color:pos<=3?["#D97706","#6B7280","#92400E"][pos-1]:T.muted,textAlign:"center",minWidth:48}}>
+                        {medal||`#${pos}`}
+                      </td>
+                      <td style={{padding:"12px 14px"}}>
+                        <div style={{fontWeight:700,color:T.text}}>{r.atleta.nombre}</div>
+                        <div style={{fontSize:11,color:T.muted,marginTop:1}}>{r.atleta.categoria}</div>
+                      </td>
+                      <td style={{padding:"12px 14px",color:T.sub}}>{r.atleta.academia}</td>
+                      <td style={{padding:"12px 14px"}}><GrupoBadge grupo={r.atleta.grupoEdad} small/></td>
+                      <td style={{padding:"12px 14px"}}><CintBadge cinturon={r.atleta.cinturon} small/></td>
+                      <td style={{padding:"12px 14px",textAlign:"center",fontWeight:700,color:"#D97706"}}>{r.oro||"—"}</td>
+                      <td style={{padding:"12px 14px",textAlign:"center",fontWeight:700,color:"#6B7280"}}>{r.plata||"—"}</td>
+                      <td style={{padding:"12px 14px",textAlign:"center",fontWeight:700,color:"#92400E"}}>{r.bronce||"—"}</td>
+                      <td style={{padding:"12px 14px",textAlign:"center"}}>
+                        <span style={{display:"inline-block",padding:"4px 14px",borderRadius:20,
+                          fontWeight:900,fontSize:14,
+                          background:pos===1?"#FEF3C7":pos===2?"#F3F4F6":pos===3?"#FEF3C7":T.accentSoft,
+                          color:pos===1?"#D97706":pos===2?"#6B7280":pos===3?"#92400E":T.accent}}>
+                          {r.puntos}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return(
     <div style={{minHeight:"100vh",background:T.bg,
       color:T.text,fontFamily:"'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif"}}>
@@ -737,6 +860,7 @@ export default function TKDTournament(){
       {vista==="dashboard"&&renderDashboard()}
       {vista==="atletas"  &&renderAtletas()}
       {vista==="brackets" &&renderBrackets()}
+      {vista==="ranking"  &&renderRanking()}
     </div>
   );
 }
